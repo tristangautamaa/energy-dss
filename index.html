@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Energy Access Planner</title>
+  <meta name="description" content="A screening aid that shows which of Indonesia's 514 districts to consider first for renewable-energy access programs, and why.">
+  <link rel="icon" href="data:,">
+  <link rel="preload" href="fonts/PlusJakartaSans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="vendor/maplibre-gl.css">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <a class="skip" href="#panel">Skip to the shortlist</a>
+
+  <header class="topbar">
+    <div class="brand">Energy Access Planner</div>
+    <button type="button" class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav id="nav" aria-label="Views">
+      <a href="#map" id="nav-map" aria-current="page">Map</a>
+      <a href="#rank" id="nav-rank">Rank and weights</a>
+      <a href="#compare" id="nav-compare">Compare</a>
+      <a href="#how" id="nav-how">How it works</a>
+    </nav>
+    <div class="topbar-note" id="data-date"></div>
+  </header>
+
+  <!-- ===================== Map ===================== -->
+  <main class="view shell" id="view-map">
+    <aside class="panel" id="panel" aria-label="Map layer and shortlist">
+      <button type="button" class="sheet-toggle" id="sheet-toggle" aria-expanded="false" aria-controls="panel"><span>Show the shortlist</span></button>
+      <section class="question">
+        <h1>Where should we look first?</h1>
+      </section>
+
+      <section class="layers" aria-label="Colour the map by">
+        <div class="segmented" role="radiogroup" aria-label="Colour the map by" id="layer-switch">
+          <button type="button" role="radio" aria-checked="true" data-layer="need">Disadvantage</button>
+          <button type="button" role="radio" aria-checked="false" data-layer="feas">Solar &amp; wind</button>
+          <button type="button" role="radio" aria-checked="false" data-layer="screen">Similarity</button>
+          <button type="button" role="radio" aria-checked="false" data-layer="type">Landscape</button>
+        </div>
+        <p class="layer-help" id="layer-help"></p>
+      </section>
+
+      <section class="shortlist" aria-labelledby="short-h">
+        <h2 id="short-h">Shortlist: 50 districts to check first</h2>
+        <p class="short-sub" id="short-sub"></p>
+        <div class="filters">
+          <label class="sr" for="f-search">Search districts</label>
+          <input id="f-search" type="search" placeholder="Search a district" autocomplete="off">
+          <label class="sr" for="f-island">Island group</label>
+          <select id="f-island"><option value="">All island groups</option></select>
+          <label class="sr" for="f-prov">Province</label>
+          <select id="f-prov"><option value="">All provinces</option></select>
+        </div>
+        <div class="list-head" aria-hidden="true"><span>#</span><span>District</span><span>Disadvantage</span><span>Similarity</span></div>
+        <ol class="list" id="short-list" aria-label="Shortlist, ranked by similarity score"></ol>
+        <p class="list-empty" id="list-empty" hidden>No shortlisted district matches. Clear a filter or the search box.</p>
+      </section>
+
+      <footer class="panel-foot">
+        <button type="button" class="btn outline" id="btn-csv">Download shortlist (CSV)</button>
+      </footer>
+    </aside>
+
+    <section class="stage" aria-label="Map of Indonesia">
+      <div id="map" role="application" aria-label="Interactive map of 514 Indonesian districts. The shortlist panel gives the same information as a list."></div>
+      <div class="map-caption" id="map-caption"></div>
+      <button type="button" class="legend-btn" id="legend-btn" aria-expanded="false" aria-controls="legend">Legend</button>
+      <div class="legend" id="legend" aria-label="Map legend"></div>
+      <div class="tip" id="tip" role="tooltip" hidden></div>
+      <aside class="profile" id="profile" aria-label="District profile" aria-hidden="true" tabindex="-1"></aside>
+    </section>
+  </main>
+
+  <!-- ===================== Rank and weights ===================== -->
+  <main class="view rank-view" id="view-rank" hidden>
+    <aside class="panel" aria-label="Weights">
+      <section class="question">
+        <h1>Rank and weights</h1>
+        <p>Move a slider. The table and map update.</p>
+      </section>
+      <section class="weights">
+        <div class="presets" id="presets" role="group" aria-label="Presets"></div>
+        <div id="sliders"></div>
+        <p class="note">0 ignores a factor; 10 weighs it most. Only relative sizes matter. Solar and wind resource and population start at 0.</p>
+        <p class="warn" id="rk-warn" role="alert" hidden>Set at least one weight above zero.</p>
+        <button type="button" class="btn outline" id="rk-reset">Reset weights</button>
+      </section>
+    </aside>
+    <section class="stage" aria-label="Map of districts coloured by rank under your weights">
+      <div id="rk-map" role="application" aria-label="Map of districts coloured by rank under your weights. The table gives the same information as a list."></div>
+      <div class="map-caption">Rank under your weights &middot; 514 districts</div>
+      <div class="legend static" id="rk-legend"></div>
+      <div class="tip" id="rk-tip" role="tooltip" hidden></div>
+    </section>
+    <section class="table-pane" aria-labelledby="rk-h">
+      <div class="tp-head"><h2 id="rk-h">Top 50 under your weights</h2><button type="button" class="btn outline small" id="rk-csv">Download CSV</button></div>
+      <p class="short-sub" id="rk-summary" aria-live="polite"></p>
+      <div class="tp-scroll">
+        <table class="rk-table"><thead><tr><th scope="col" class="num">Rank</th><th scope="col">District</th><th scope="col" class="num">Score</th><th scope="col">Stability</th></tr></thead><tbody id="rk-body"></tbody></table>
+      </div>
+      <p class="note">Score: 0 to 100 for these weights. Stability: how often a district stays in the top 30 when the weights are drawn at random (5,000 tries). <span id="rk-stab-note"></span> Your sliders do not change the draw. Select a row to open the district.</p>
+    </section>
+  </main>
+
+  <!-- ===================== Compare ===================== -->
+  <main class="view page" id="view-compare" hidden>
+    <div class="page-in wide">
+      <div class="cmp-top">
+        <div><h1>Compare districts</h1><p class="lead">Two to four districts side by side.</p></div>
+        <div class="cmp-add">
+          <label for="cmp-input" class="sr">Add a district</label>
+          <input id="cmp-input" list="cmp-options" placeholder="Add a district" autocomplete="off">
+          <datalist id="cmp-options"></datalist>
+          <button type="button" class="btn outline" id="cmp-add">Add</button>
+          <button type="button" class="btn quiet" id="cmp-clear" hidden>Clear all</button>
+        </div>
+      </div>
+      <p class="warn" id="cmp-msg" role="status"></p>
+      <div id="cmp-out" class="cmp-scroll"></div>
+    </div>
+  </main>
+
+  <!-- ===================== How it works ===================== -->
+  <main class="view page" id="view-how" hidden>
+    <article class="page-in prose" id="how-body"><p>Loading.</p></article>
+  </main>
+
+  <script src="vendor/maplibre-gl.js"></script>
+  <script src="js/core.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/mapview.js"></script>
+  <script src="js/rankview.js"></script>
+  <script src="js/compareview.js"></script>
+  <script src="js/howview.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+{
+ "version": "3.0",
+ "data_date": "2 October 2026",
+ "n_districts": 514,
+ "n_current": 30,
+ "n_shortlist": 50,
+ "shortlist_current": 26,
+ "shortlist_graduated": 7,
+ "shortlist_never": 17,
+ "blend_weights": {
+  "xgboost_current_list": 0.4,
+  "random_forest_wider_list": 0.6
+ },
+ "components": [
+  {
+   "key": "energy_accessibility",
+   "label": "Night-time light",
+   "default_weight": 1,
+   "help": "Darker nights score higher."
+  },
+  {
+   "key": "energy_poverty",
+   "label": "Poverty & human development",
+   "default_weight": 1,
+   "help": "Poorer, less developed places score higher."
+  },
+  {
+   "key": "infrastructure",
+   "label": "Road access",
+   "default_weight": 1,
+   "help": "Fewer roads and longer distances score higher."
+  },
+  {
+   "key": "geographic",
+   "label": "Terrain & land cover",
+   "default_weight": 1,
+   "help": "Rugged, forested or wet land scores higher."
+  },
+  {
+   "key": "renewable_potential",
+   "label": "Solar & wind resource",
+   "default_weight": 0,
+   "help": "Stronger sun and wind score higher."
+  },
+  {
+   "key": "population",
+   "label": "Population",
+   "default_weight": 0,
+   "help": "Larger populations score higher."
+  }
+ ],
+ "presets": [
+  {
+   "name": "Disadvantage only",
+   "weights": {
+    "energy_accessibility": 1,
+    "energy_poverty": 1,
+    "infrastructure": 1,
+    "geographic": 1,
+    "renewable_potential": 0,
+    "population": 0
+   }
+  },
+  {
+   "name": "Disadvantage + solar & wind",
+   "weights": {
+    "energy_accessibility": 1,
+    "energy_poverty": 1,
+    "infrastructure": 1,
+    "geographic": 1,
+    "renewable_potential": 1,
+    "population": 0
+   }
+  },
+  {
+   "name": "All six equal",
+   "weights": {
+    "energy_accessibility": 1,
+    "energy_poverty": 1,
+    "infrastructure": 1,
+    "geographic": 1,
+    "renewable_potential": 1,
+    "population": 1
+   }
+  }
+ ],
+ "types": [
+  {
+   "id": 0,
+   "name": "Mountainous, low wind",
+   "description": "High ground (median about 1,400 m), almost no roads, far from a main road, weak wind. All 16 are in Papua.",
+   "count": 16
+  },
+  {
+   "id": 1,
+   "name": "Windy, well connected",
+   "description": "Good wind, a dense road network and busy night lights. Mostly Java-Bali and Sumatra.",
+   "count": 91
+  },
+  {
+   "id": 2,
+   "name": "Windy, less connected",
+   "description": "The strongest solar and good wind, but fewer roads. Mostly Sulawesi and Nusa Tenggara.",
+   "count": 112
+  },
+  {
+   "id": 3,
+   "name": "Flat, best connected",
+   "description": "Flat and highly built up, with the densest roads and the brightest nights. Mostly Java-Bali.",
+   "count": 40
+  },
+  {
+   "id": 4,
+   "name": "Low wind, mixed terrain",
+   "description": "The largest group: weaker wind, dense tree cover and a mix of hills and plains. Mostly Sumatra and Kalimantan.",
+   "count": 212
+  },
+  {
+   "id": 5,
+   "name": "Flat, vegetated, windy",
+   "description": "Flat land with the best wind of all seven types and moderate road access. Mostly Sumatra and Kalimantan.",
+   "count": 31
+  },
+  {
+   "id": 6,
+   "name": "Flat, densely vegetated, remote",
+   "description": "Flat land with few roads and almost no night light, a long way from a main road. Mostly Kalimantan.",
+   "count": 12
+  }
+ ],
+ "sources": [
+  {
+   "theme": "District boundaries",
+   "source": "geoBoundaries ADM2 (simplified)",
+   "period": "Current release",
+   "resolution": "Vector polygons"
+  },
+  {
+   "theme": "List of underdeveloped districts",
+   "source": "Ministry of Villages regulation No. 11/2025 (Strategic Plan 2025-2029)",
+   "period": "2025-2029",
+   "resolution": "District"
+  },
+  {
+   "theme": "Human Development Index (HDI)",
+   "source": "Statistics Indonesia web API (new-method series)",
+   "period": "2024",
+   "resolution": "District"
+  },
+  {
+   "theme": "Poverty rate",
+   "source": "Statistics Indonesia web API",
+   "period": "2024",
+   "resolution": "District"
+  },
+  {
+   "theme": "Population",
+   "source": "Statistics Indonesia",
+   "period": "2024",
+   "resolution": "District"
+  },
+  {
+   "theme": "Nighttime lights",
+   "source": "NASA VIIRS Black Marble VNP46A2",
+   "period": "2023 annual mean",
+   "resolution": "500 m"
+  },
+  {
+   "theme": "Elevation",
+   "source": "USGS SRTM",
+   "period": "Static",
+   "resolution": "30 m"
+  },
+  {
+   "theme": "Land cover",
+   "source": "ESA WorldCover v200",
+   "period": "2021",
+   "resolution": "10 m"
+  },
+  {
+   "theme": "Solar and weather",
+   "source": "NASA POWER (syn1deg and MERRA-2 grids)",
+   "period": "2020-2024 mean",
+   "resolution": "111 km (solar), 55 x 70 km (weather)"
+  },
+  {
+   "theme": "Wind",
+   "source": "Global Wind Atlas 3 (community catalog dataset)",
+   "period": "Modelled 10-year mean",
+   "resolution": "250 m"
+  },
+  {
+   "theme": "Roads",
+   "source": "OpenStreetMap (Geofabrik regional extracts, 7 regions)",
+   "period": "Extract downloaded in 2026",
+   "resolution": "Vector lines"
+  }
+ ],
+ "status_labels": {
+  "current": "Currently listed",
+  "graduated": "Formerly listed",
+  "never": "Never listed"
+ }
+}
