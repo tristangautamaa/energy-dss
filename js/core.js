@@ -16,14 +16,14 @@
   EAP.LAYERS = {
     need: { prop: "need", title: "Access disadvantage index", unit: "0 to 100", breaks: [55, 63, 68, 73, 80, 90], colours: EAP.C.NEED, bar: "#3F2D75",
       fmt: v => v.toFixed(1), tick: v => v.toFixed(0), lo: "Less disadvantaged", hi: "More disadvantaged",
-      help: "Darker, poorer, more remote and harder-to-reach districts score higher." },
+      help: "How far a district is from good energy access, from 0 to 100. It averages four parts with equal weight: how dark the district is at night, poverty and low human development, few roads and long distances to a main road, and rugged, forested or wet land. Higher means darker, poorer, more remote and harder to reach." },
     feas: { prop: "feas", title: "Solar and wind resource", unit: "0 to 100", breaks: [15, 25, 35, 45, 60, 80], colours: EAP.C.SUN, bar: "#E8A317",
       fmt: v => v.toFixed(1), tick: v => v.toFixed(0), lo: "Weaker sun and wind", hi: "Stronger sun and wind",
-      help: "Sun and wind available for renewable energy." },
+      help: "How strong the sun and wind are, from 0 to 100, based on solar irradiance and wind speed at 100 m. Higher means better conditions for solar panels or wind turbines. It shows where renewables could work, not where the need is." },
     screen: { prop: "screen", title: "Similarity to underdeveloped list", unit: "0 to 1", breaks: [0.12, 0.16, 0.2, 0.25, 0.35, 0.5], colours: EAP.C.TEAL, bar: "#286B78",
       fmt: v => v.toFixed(2), tick: v => v.toFixed(2), lo: "Less like the list", hi: "More like the list",
-      help: "How closely a district resembles the 30 currently listed districts. Not a measure of disadvantage." },
-    type: { prop: "type", title: "Landscape group", help: "Districts grouped by terrain, roads and wind." },
+      help: "How closely a district looks like the 30 districts on the government's 2025–2029 list of underdeveloped regions, from 0 to 1, judged from map data only (night light, terrain, land cover, sun, wind and island group). It flags places worth a closer look; it is not a measure of disadvantage. The 50 highest scores form the shortlist." },
+    type: { prop: "type", title: "Landscape group", help: "Seven groups of districts with similar terrain, road access, wind and night light, found by clustering. Use them to compare similar places; they describe districts and do not rank them." },
   };
 
   // ---------------------------------------------------------------- helpers
